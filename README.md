@@ -16,7 +16,6 @@ Advanced Lytro camera control and light field image processing
 
 Features
 --------
-
 See Documentation for full list of Features and Quick Setup Guide
 
     * Camera Controls
@@ -34,8 +33,7 @@ Requirements
 + SD Card inside the camera (can it be avoided?)
 
 
-------------------
-
-### Other resources:
+Other resources:
+------
 + For the v1 Lytro: http://optics.miloush.net/lytro/TheResources.aspx
 

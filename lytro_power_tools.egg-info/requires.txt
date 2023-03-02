@@ -1,5 +1,0 @@
-jsonschema
-dictdiffer
-numpy
-scipy
-pytweening
