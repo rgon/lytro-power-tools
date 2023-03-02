@@ -80,6 +80,11 @@ class Build:
             self.cal_data_path = abspath(profile, 'AppData\Local\Lytro')
             self.currentDir = os.getcwd().replace(r"\\", r"\\\\")
 
+        elif sys.platform.startswith('linux'):
+            home = os.getenv('HOME')
+            self.cal_data_path = abspath(home, '.Lytro')
+            self.currentDir = os.getcwd()
+        
         else:
             raise OSError("unsupported operating system: " + sys.platform)
 
