@@ -19,7 +19,7 @@
 import multiprocessing
 from functools import partial
 
-import config
+from . import config
 from lpt.lfp.tnt import Tnt
 from lpt.recipe.params import Params
 from lpt.utils.argutils import ArgUtils
@@ -68,7 +68,7 @@ class ArgParser(object):
         """
 
         dests = tnt.dests(mode=mode, **kwargs)
-        for group, dests in dests.items():
+        for group, dests in list(dests.items()):
 
             build = subparser.add_argument_group(group + ' arguments')
 

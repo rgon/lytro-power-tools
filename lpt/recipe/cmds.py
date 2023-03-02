@@ -108,9 +108,9 @@ class Cmds(Make):
 
         if anim or scale or auto:
 
-            [mutual(x, **anim) for x in scale.keys()]
-            [mutual(x, **auto) for x in scale.keys()]
-            [mutual(x, **anim) for x in auto.keys()]
+            [mutual(x, **anim) for x in list(scale.keys())]
+            [mutual(x, **auto) for x in list(scale.keys())]
+            [mutual(x, **anim) for x in list(auto.keys())]
 
             status("setting {} properties".format(param))
 
@@ -199,11 +199,11 @@ class Cmds(Make):
                 store = recipe.animation_store
             else:
                 store = recipe.view_store
-            keys = store.keys()
+            keys = list(store.keys())
 
         else:
             params = self.view_params(**args.__dict__)
-            keys = [k for k, v in params.items() if v]
+            keys = [k for k, v in list(params.items()) if v]
 
             if args.animation:
                 keys = [self._anim_param(p) for p in keys]
@@ -227,10 +227,10 @@ class Cmds(Make):
         self._set_print_help(args)
 
         params = self.view_params(**args.__dict__)
-        custom = [k for k, v in params.items() if v]
+        custom = [k for k, v in list(params.items()) if v]
         args.store = args.store if args.store else 'show'
         view = args.store == 'show'
-        keys = custom or params.keys()
+        keys = custom or list(params.keys())
 
         if not view:
             _keys = []
@@ -296,7 +296,7 @@ class Cmds(Make):
 
         self._set_print_help(args)
         merge_list = args.merge_list
-        items = args.__dict__.items()
+        items = list(args.__dict__.items())
         avail = []
         shape = args.t0, args.t1, args.auto_ease, args.auto_shape
         eases = {k: shape for k in merge_list}
@@ -309,7 +309,7 @@ class Cmds(Make):
             e = "--select: at least one view parameter selection is required"
             assert custom, ToolError(e, self.print_help)
 
-            for k, v in eases.items():
+            for k, v in list(eases.items()):
                 if k not in custom:
                     del eases[k]
                     continue
@@ -318,7 +318,7 @@ class Cmds(Make):
         else:
             eases.update(custom)
 
-        for param, attrs in eases.items():
+        for param, attrs in list(eases.items()):
             t0, t1, ease, shape = attrs
             self._assert_t0_lt_t1(t0, t1, param)
             if not any_(t0):
@@ -383,9 +383,9 @@ class Cmds(Make):
                     values[param] = []
                 values[param].append(value)
 
-        merge = od([(k, v) for k, v in values.items() if len(set(v)) > 1])
+        merge = od([(k, v) for k, v in list(values.items()) if len(set(v)) > 1])
 
-        for param, values in merge.items():
+        for param, values in list(merge.items()):
             t0, t1, ease, shape = eases[param]
             merge[param] = {'t0': t0, 't1': t1, 'ease': ease,
                             'shape': shape, 'values': values}
@@ -495,7 +495,7 @@ class Cmds(Make):
                 pts = cls.points
                 name = cls.view.name
                 self._assert_points(pts, param)
-                x_pts, y_pts = zip(*pts)
+                x_pts, y_pts = list(zip(*pts))
 
                 if not pts and custom:
                     status(param + ": no animation found", indent=True)
@@ -554,7 +554,7 @@ class Cmds(Make):
         if params:
             status("adjusting view parameters")
 
-        for param, value in params.items():
+        for param, value in list(params.items()):
             cls = recipe[param]
             cls(value)
 

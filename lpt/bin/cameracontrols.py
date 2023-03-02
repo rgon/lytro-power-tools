@@ -17,7 +17,7 @@
 # SOFTWARE OR ITS DERIVATIVES.
 # </copyright>
 
-from __future__ import division
+
 
 __prog__ = 'cameracontrols'
 __version__ = '1.1'
@@ -59,7 +59,7 @@ subparser = parser.add_subparsers()
 
 
 def print_current_state(state, description_str="Current State is"):
-    print "\n\n{description} ---> {state}\n".format(description=description_str, state=state)
+    print("\n\n{description} ---> {state}\n".format(description=description_str, state=state))
 
 
 def check_range(usr_input, val_range, string):
@@ -91,8 +91,8 @@ def check_focus_range(usr_input):
         cam.disable_virtual_cable(True)
         #parser.error("Focus Step '{step}' out of range. Valid range for current focal length is MIN {min} | MAX {max} "
         #             .format(step=focusStep, min=min_, max=max_))
-        print "\n\ncameracontrols: error: Focus Step '{step}' out of range. Valid range for current focal length is MIN" \
-              " {min} | MAX {max}\n ".format(step=focusStep, min=min_, max=max_)
+        print("\n\ncameracontrols: error: Focus Step '{step}' out of range. Valid range for current focal length is MIN" \
+              " {min} | MAX {max}\n ".format(step=focusStep, min=min_, max=max_))
         sys.exit()
     return focusStep
 

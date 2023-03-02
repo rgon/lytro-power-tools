@@ -26,7 +26,7 @@ from datetime import datetime
 
 from lytro.ui.widgets import Label, Button
 from lytro.ui.gui import Gui
-import camerabin
+from . import camerabin
 
 
 class Execution:
@@ -132,18 +132,18 @@ class Execution:
                 self.exit_script_gracefully()
             #the first picture is taken at MIN focus step
             if i == 0:
-                print "Setting FOCUS STEP to " + str(lowest_step)
+                print("Setting FOCUS STEP to " + str(lowest_step))
                 self.cam.set_real_focus(lowest_step)
                 self.cam.capture_wait()
             #The last picture is taken at MAX focus step
             elif i == (picture_count - 1):
-                print "Setting FOCUS STEP to " + str(highest_step)
+                print("Setting FOCUS STEP to " + str(highest_step))
                 self.cam.set_real_focus(highest_step)
                 self.cam.capture_wait()
             else:
                 increment = median_step * i
                 focus_step = lowest_step + increment
-                print "Setting FOCUS STEP to " + str(focus_step)
+                print("Setting FOCUS STEP to " + str(focus_step))
                 self.cam.set_real_focus(focus_step)
                 self.cam.capture_wait()
 
@@ -166,18 +166,18 @@ class Execution:
                 self.exit_script_gracefully()
             #the first picture is taken at MIN zoom step
             if i == 0:
-                print "Setting ZOOM STEP to " + str(lowest_step)
+                print("Setting ZOOM STEP to " + str(lowest_step))
                 self.cam.set_real_zoom(lowest_step)
                 self.cam.capture_wait()
             #The last picture is taken at MAX zoom step
             elif i == (picture_count - 1):
-                print "Setting ZOOM STEP to " + str(highest_step)
+                print("Setting ZOOM STEP to " + str(highest_step))
                 self.cam.set_real_zoom(highest_step)
                 self.cam.capture_wait()
             else:
                 increment = median_step * i
                 zoom_step = lowest_step + increment
-                print "Setting ZOOM STEP to " + str(zoom_step)
+                print("Setting ZOOM STEP to " + str(zoom_step))
                 self.cam.set_real_zoom(zoom_step)
                 self.cam.capture_wait()
 

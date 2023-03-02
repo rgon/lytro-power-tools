@@ -911,7 +911,7 @@ class ViewOrientation(BaseView):
     default     : 1
     """
 
-    choices = range(1, 9)
+    choices = list(range(1, 9))
     dest = 'viewOrientation'
     help_ = __doc__
     metavar = meta_range((1, 8))
@@ -1806,7 +1806,7 @@ class Params(object):
     def _globals(self):
         """global params items"""
 
-        items = globals().items()
+        items = list(globals().items())
         items.sort()
 
         for key, cls in items:
@@ -1862,8 +1862,8 @@ class Params(object):
             if include_animation and attr.animation:
                 _group_dests[group].append(dest + anim)
 
-        items = _group_dests.items()
-        values = _group_dests.values()
+        items = list(_group_dests.items())
+        values = list(_group_dests.values())
 
         [v.sort() for v in values]
 

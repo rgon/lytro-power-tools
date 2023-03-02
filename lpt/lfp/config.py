@@ -27,7 +27,7 @@ import os
 import re
 import sys
 import collections
-import ConfigParser
+import configparser
 import multiprocessing
 
 __prog__ = 'lfptool'
@@ -78,7 +78,7 @@ depthrep_lfp_out = 'bmp', 'png', 'dat'
 depthrep_depth_out = 'bmp', 'png'
 bools = True, False, None, 0, 1
 cpu_count = multiprocessing.cpu_count()
-cpus = range(1, cpu_count + 1)
+cpus = list(range(1, cpu_count + 1))
 powertools_cfg = abspath(lytro_home, 'lytro-power-tools.cfg')
 
 if os.path.exists(abspath(lytro_home, 'cameras')):
@@ -93,7 +93,7 @@ else:
 #
 #
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read(powertools_cfg)
 write = False
 
@@ -121,7 +121,7 @@ db = od([
     ('verbose', False),
 ])
 
-for option, value in db.items():
+for option, value in list(db.items()):
     if config.has_option(__prog__, option):
 
         config_value = config.get(__prog__, option)

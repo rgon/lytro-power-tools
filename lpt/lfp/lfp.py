@@ -107,7 +107,7 @@ class Lfp(object):
         """:return: metadata from all blobs in LFP"""
 
         blobs_metadata = {}
-        for ref, blob in self.blobs.items():
+        for ref, blob in list(self.blobs.items()):
             blobs_metadata[ref] = blob.metadata
         return blobs_metadata
 
@@ -271,7 +271,7 @@ class Lfp(object):
     def _master_sha(self):
         """:return: master sha1 reference from blob data"""
 
-        for sha, blob in self.blobs.items():
+        for sha, blob in list(self.blobs.items()):
             if blob.magic_number == self._master_magic_number:
                 return sha
 
@@ -411,7 +411,7 @@ class Lfp(object):
                 content = accel[vc]
 
                 if h in content and w in content:
-                    items = content.items()
+                    items = list(content.items())
                     image = {k: v for k, v in items if
                              not isinstance(v, dict)}
                     image[t] = accel[t] if t in accel else ''
@@ -533,7 +533,7 @@ class Lfp(object):
                 heights.append(h)
                 widths.append(w)
 
-        return zip(heights, widths)
+        return list(zip(heights, widths))
 
 
 class _Blob(object):

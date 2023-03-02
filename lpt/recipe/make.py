@@ -91,7 +91,7 @@ class Make(object):
         else:
             def is_apt(x): return x
 
-        items = kwargs.items()
+        items = list(kwargs.items())
         return {k: v for k, v in items if is_apt(k) and any_(v, bool_=bool_)}
 
     @staticmethod
@@ -297,7 +297,7 @@ class Make(object):
         points = cls.points
 
         self._assert_points(points, param)
-        times, values = zip(*points)
+        times, values = list(zip(*points))
 
         if scale_time:
             a, b = scale_time
@@ -307,7 +307,7 @@ class Make(object):
             a, b = scale_value
             values = calcutils.scale(values, float(a), float(b))
 
-        points = zip(times, values)
+        points = list(zip(times, values))
         cls.times.delete()
         cls.values.delete()
         cls.handle_pairs.delete()
@@ -389,7 +389,7 @@ class Make(object):
         x_line = calcutils.normalize(x_line, a=x0, b=x1)
         y_line = calcutils.normalize(y_line, a=y0, b=y1)
 
-        points = zip(x_line, y_line)
+        points = list(zip(x_line, y_line))
         self.keyframe_calc(recipe, param, points)
 
     def control_points(self, x_lst, y_lst):
@@ -401,7 +401,7 @@ class Make(object):
         """
 
         argutils.lens_match(x=x_lst, y=y_lst)
-        zipped = zip(x_lst, y_lst)
+        zipped = list(zip(x_lst, y_lst))
         sets = [self.control_points_obj(*set_) for set_ in zipped]
         return sets
 
@@ -459,7 +459,7 @@ class Make(object):
         """
 
         argutils.lens_match(dt0=dt0, dt1=dt1, dv0=dv0, dv1=dv1)
-        zipped = zip(dt0, dt1, dv0, dv1)
+        zipped = list(zip(dt0, dt1, dv0, dv1))
         sets = [self.handle_pairs_obj(*set_) for set_ in zipped]
         return sets
 
@@ -490,7 +490,7 @@ class Make(object):
 
         recipe = self._recipe(recipe)
         argutils.assert_len(props)
-        props = {k: v[0] for k, v in props.items()}
+        props = {k: v[0] for k, v in list(props.items())}
         props = self.keyframe_props(**props)
         keyframe = recipe[param].keyframes[index]
         keyframe(props)
@@ -513,7 +513,7 @@ class Make(object):
             points.append(points[-1])
 
         while points:
-            keyframe = [points.popleft() for _ in xrange(3)]
+            keyframe = [points.popleft() for _ in range(3)]
             keyframes.append(keyframe)
 
         for keyframe in keyframes:
@@ -632,7 +632,7 @@ class Make(object):
         """
 
         recipe = self._recipe(recipe)
-        t_ones = [x['t1'] for x in master.values()]
+        t_ones = [x['t1'] for x in list(master.values())]
         duration = max(t_ones)
         time_line = np.linspace(self._auto_buffer, duration, steps)
 
@@ -640,7 +640,7 @@ class Make(object):
         type_t1 = params.animation.times.type_t1
         min_dist = calcutils.min_distance
 
-        for param, merge in master.items():
+        for param, merge in list(master.items()):
 
             t0 = merge['t0']
             t1 = merge['t1']
@@ -732,7 +732,7 @@ class Make(object):
         else:
             if data is False:
                 return False
-            keys = data.keys()
+            keys = list(data.keys())
             dests = params.dests(meta=True, include_animation=True)
             return all(k in dests for k in keys)
 
@@ -766,9 +766,9 @@ class Generator(object):
 
     def __call__(self, mark, recipe_out=None):
 
-        for param, curve in self.store.items():
+        for param, curve in list(self.store.items()):
             cls = self.recipe_out[param].view
-            _, t = calcutils.min_distance(curve.keys(), mark)
+            _, t = calcutils.min_distance(list(curve.keys()), mark)
             v = curve[t]
             cls(v)
 
@@ -779,14 +779,14 @@ class Generator(object):
     def init(self):
         """generator initialization; read input recipe parameters"""
 
-        for param, points in self.recipe_in.points.items():
+        for param, points in list(self.recipe_in.points.items()):
 
-            x_pts, y_pts = zip(*points)
+            x_pts, y_pts = list(zip(*points))
             type_ = self.recipe_in[param].meta.type_
             curve = calcutils.interp(x_pts, y_pts, num=self.total)
             times, values = curve
             values = [type_(v) for v in values]
-            zipped = zip(times, values)
+            zipped = list(zip(times, values))
 
             self.store[param] = {k: v for k, v in zipped}
 
@@ -798,13 +798,13 @@ class Generator(object):
         """
 
         store = od()
-        for param, curve in self.store.items():
+        for param, curve in list(self.store.items()):
             store[param] = {}
             cls = self.recipe_out[param]
             type_ = cls.meta.type_
 
             for mark in times:
-                _, t = calcutils.min_distance(curve.keys(), mark)
+                _, t = calcutils.min_distance(list(curve.keys()), mark)
                 v = curve[t]
                 store[param][t] = type_(v)
 

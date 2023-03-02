@@ -288,13 +288,13 @@ class Build:
     def check_space_and_framing(self, picture_count, pictures_remaining):
         #If cameratool is not awake it will not run the script.
         if int(pictures_remaining) == 0:
-            print"\nTurn ON camera display and try again. Make sure sdcard is properly mounted and that is not completely "\
-                 "full\n\n"
+            print("\nTurn ON camera display and try again. Make sure sdcard is properly mounted and that is not completely "\
+                 "full\n\n")
             self.cam.disable_virtual_cable(True)
             sys.exit()
 
         elif int(picture_count) > int(pictures_remaining):
-            print "\nNot enough space in your sdcard to accomodate {} pictures.\n\n".format(picture_count)
+            print("\nNot enough space in your sdcard to accomodate {} pictures.\n\n".format(picture_count))
             self.cam.disable_virtual_cable(True)
             sys.exit()
 
@@ -306,17 +306,17 @@ class Build:
 
     def push_files_to_sdcard(self):
         sdcard_path = 'storage/sdcard1'
-        print "\nPush 'args.json' to {}".format(sdcard_path)
+        print("\nPush 'args.json' to {}".format(sdcard_path))
         os.system("adb push {source} {dest}".format(source=os.path.join(self.real_path, "args.json"), dest=sdcard_path))
         time.sleep(.5)
-        print "\nPush 'run.py' to {}".format(sdcard_path)
+        print("\nPush 'run.py' to {}".format(sdcard_path))
         os.system("adb push {source} {dest}".format(source=os.path.join(self.real_path, "run.py"), dest=sdcard_path))
         time.sleep(.5)
-        print "\nPush 'camerabin.py' to {}".format(sdcard_path)
+        print("\nPush 'camerabin.py' to {}".format(sdcard_path))
         os.system("adb push {source} {dest}".format(source=os.path.join(self.real_path, "camerabin.py"),
                                                     dest=sdcard_path))
         time.sleep(.5)
-        print "\nPush '__init__.py' to {}".format(sdcard_path)
+        print("\nPush '__init__.py' to {}".format(sdcard_path))
         os.system("adb push {source} {dest}".format(source=os.path.join(self.real_path, "__init__.py"),
                                                     dest=sdcard_path))
         time.sleep(.5)
@@ -334,4 +334,4 @@ class Build:
         os.system("adb shell sendevent /dev/input/event2 0 0 0")
         os.system("adb shell sendevent /dev/input/event2 1 559 0")
         os.system("adb shell sendevent /dev/input/event2 0 0 0")
-        print "\nYou can now disconnect USB cable and press start on camera display to begin \n"
+        print("\nYou can now disconnect USB cable and press start on camera display to begin \n")

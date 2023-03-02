@@ -114,7 +114,7 @@ class Cmds(TntCommon):
 
         def arg(a): return arg_format(a, split='_', join='-', pre='--')
         dests = tnt.dests(combine=False)
-        items = args.__dict__.items()
+        items = list(args.__dict__.items())
         act = getattr(tnt, action)
         act_arg = act.arg_alt or act.arg
 
@@ -195,7 +195,7 @@ class Cmds(TntCommon):
 
         if args.per_lfp:
             lin = np.linspace(0, end, args.per_lfp)
-            per_range = range(args.per_lfp)
+            per_range = list(range(args.per_lfp))
             cfg_queue = [(p, lin[i]) for p in paths for i in per_range]
 
         else:
@@ -304,7 +304,7 @@ class Cmds(TntCommon):
         msgutils.status("calculating 4d coordinates (row {r} : column {c})"
                         .format(r=args.row, c=args.column))
 
-        coords = calcutils.four_d_coord(args.row, args.column).items()
+        coords = list(calcutils.four_d_coord(args.row, args.column).items())
         coords = od(sorted(coords))
         msgutils.dumps(coords)
 

@@ -124,7 +124,7 @@ class Tnt(object):
 
         self.actions = self.dests(filter_group='action', combine=False)
 
-        for arg, value in kwargs.items():
+        for arg, value in list(kwargs.items()):
             e = "tnt argument not found: {}".format(arg)
             assert arg in vars(self), ToolError(e, self.print_help)
             cls = vars(self)[arg]
@@ -270,7 +270,7 @@ class Tnt(object):
 
             group_dests[group].append(dest)
 
-        all_dests = [d for g in group_dests.values() for d in g]
+        all_dests = [d for g in list(group_dests.values()) for d in g]
 
         return group_dests if combine else all_dests
 

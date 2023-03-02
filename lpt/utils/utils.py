@@ -24,6 +24,7 @@ import textwrap
 
 from lpt.utils.msgutils import MsgUtils
 from lpt.utils.msgutils import ToolError
+from functools import reduce
 
 msgutils = MsgUtils()
 
@@ -171,7 +172,7 @@ class Utils(object):
         if not re.match(fp, name):
             return False
 
-        file_range = xrange(file_start, file_end + 1)
+        file_range = range(file_start, file_end + 1)
         e = "pattern must contain one numeric '#' start point: " + file_pattern
         assert file_pattern.count('#') == 1, ToolError(e, self.print_help)
 
@@ -196,7 +197,7 @@ class Utils(object):
         :return: flattened dictionary
         """
 
-        return {k: v for k, v in dict_.items() if self.any_(v, **kwargs)}
+        return {k: v for k, v in list(dict_.items()) if self.any_(v, **kwargs)}
 
     @staticmethod
     def full_path(path):
@@ -310,7 +311,7 @@ class Utils(object):
                     results.extend(_find_field(value, i))
 
             elif isinstance(data, dict):
-                for key, value in data.items():
+                for key, value in list(data.items()):
                     match = None
                     if exact:
                         if field == key:

@@ -81,12 +81,12 @@ class ArgUtils(object):
 
         def arg_str(l): return ', '.join([self._arg(x) for x in l])
 
-        values = kwargs.values()
+        values = list(kwargs.values())
         any_ = utils.any_(values, iter_=False)
         all_ = utils.all_(values, iter_=False)
 
-        set_args = [k for k, v in kwargs.items() if v]
-        not_set_args = [k for k, v in kwargs.items() if not v]
+        set_args = [k for k, v in list(kwargs.items()) if v]
+        not_set_args = [k for k, v in list(kwargs.items()) if not v]
 
         req = [k for k in set_args if k not in not_set_args]
         req_args = kwargs if set_args else {}
@@ -178,7 +178,7 @@ class ArgUtils(object):
         :raise: `ToolError` if `len_` does not match length of `props`
         """
 
-        for key, value in props.items():
+        for key, value in list(props.items()):
             arg = self._arg(key)
             e = arg + ": only {} value can be specified".format(len_)
             l = len(value) if hasattr(value, '__len__') else 1
@@ -372,13 +372,13 @@ class ArgUtils(object):
         :raise: `ToolError` if `kwargs` values do not match length
         """
 
-        keys = kwargs.keys()
-        values = kwargs.values()
+        keys = list(kwargs.keys())
+        values = list(kwargs.values())
 
         max_len = max([len(v) for v in values])
         match = all([len(x) == max_len for x in values])
 
-        lens = ['{}={}'.format(k, len(v)) for k, v in kwargs.items()]
+        lens = ['{}={}'.format(k, len(v)) for k, v in list(kwargs.items())]
 
         e = ("{set_}: each argument must contain the same "
              "amount of values; {not_}".format(set_=', '.join(keys),
@@ -439,7 +439,7 @@ class ArgUtils(object):
             return
 
         arg = self._arg(arg)
-        con = self._arg(have_val.keys()[0])
+        con = self._arg(list(have_val.keys())[0])
         e = "{}: not allowed with {}".format(arg, con)
         raise ToolError(e, self.print_help)
 

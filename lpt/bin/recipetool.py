@@ -149,7 +149,7 @@ def build():
     merge_groups = {}
     plot_groups = {}
 
-    for group, dests in param_dests.items():
+    for group, dests in list(param_dests.items()):
 
         blank()
         blank(group)

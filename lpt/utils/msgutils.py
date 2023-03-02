@@ -54,7 +54,7 @@ class MsgIndicator(threading.Thread):
         while self.running:
             if not self.running:
                 break
-            n = str(cycle.next())
+            n = str(next(cycle))
             o = ''.join([self.msg, n])
             sys.stdout.write(o)
             sys.stdout.flush()
@@ -106,7 +106,7 @@ class MsgUtils(object):
             sys.excepthook = lambda t, e, tb: sys.stderr.write(str(e))
             raise _LptError(out)
         elif input_:
-            return raw_input(out)
+            return input(out)
         elif getpass_:
             return getpass.getpass(out)
         elif answer:

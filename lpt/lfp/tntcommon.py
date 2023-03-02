@@ -314,7 +314,7 @@ class TntCommon(object):
         v = 'v{}'.format(sign(vpers) % vpers) if vpers else ''
 
         basedir, name, ext = utils.split_path(image_in)
-        image_out = '_'.join([s for s in name, f, u, v if s]) + ext
+        image_out = '_'.join([s for s in (name, f, u, v) if s]) + ext
         image_out = utils.join_abspath(basedir, image_out)
         return image_out
 

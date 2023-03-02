@@ -28,7 +28,7 @@ import os
 import re
 import sys
 import collections
-import ConfigParser
+import configparser
 
 __prog__ = 'recipetool'
 __version__ = '1.0.1'
@@ -73,7 +73,7 @@ auto_buffer = .0001
 #
 #
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read(powertools_cfg)
 write = False
 
@@ -91,7 +91,7 @@ db = od([
     ('verbose', False)
 ])
 
-for option, value in db.items():
+for option, value in list(db.items()):
     if config.has_option(__prog__, option):
 
         config_value = config.get(__prog__, option)

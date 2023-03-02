@@ -58,7 +58,7 @@ class ArgParser(BaseView):
         """flattens arguments passed to argparse.add_parser"""
 
         if kwargs:
-            cls_vals = {k.rstrip('_'): v for k, v in kwargs.items()}
+            cls_vals = {k.rstrip('_'): v for k, v in list(kwargs.items())}
         else:
             cls_vals = dict(
                 action=self.action,
@@ -341,7 +341,7 @@ class ArgParser(BaseView):
 
         add_arg = anim_group.add_argument
 
-        for arg, cls in self.animation.items():
+        for arg, cls in list(self.animation.items()):
 
             type_ = deepcopy(cls.type_)
             type_.keywords['arg'] = cls.key_arg
@@ -438,7 +438,7 @@ class ArgParser(BaseView):
 
         cls_vals = self._cls_vals()
 
-        for arg, cls in self.crop.items():
+        for arg, cls in list(self.crop.items()):
             s = arg[0]
             cls_vals['dest'] = arg
             cls_vals['help'] = argparse.SUPPRESS
@@ -631,13 +631,13 @@ class ArgParser(BaseView):
 
         anim_args = []
 
-        for group, props in groups.items():
+        for group, props in list(groups.items()):
             props = [p for p in props if p.animation]
             for prop in props:
                 anim_args.append((prop.key_arg, prop.dest))
 
         anim_args.sort()
-        flags, merge_list = zip(*anim_args)
+        flags, merge_list = list(zip(*anim_args))
         flags_desc = self._flag_desc(flags)
 
         input_desc = utils.dedent('''
@@ -876,7 +876,7 @@ class ArgParser(BaseView):
 
         flags = []
 
-        for group, props in groups.items():
+        for group, props in list(groups.items()):
             for prop in props:
                 self.arg_view_store_true(parser, prop.key_arg, prop.dest)
                 flags.append(prop.key_arg)

@@ -199,7 +199,7 @@ class Recipe(collections.MutableMapping):
         if data:
             _data.update(data)
 
-        for param, value in _data.items():
+        for param, value in list(_data.items()):
 
             if param in self._unsupported:
                 self.unsupported_data[param] = value
@@ -254,13 +254,13 @@ class Recipe(collections.MutableMapping):
     def _delete(self):
         """deletes all present parameters"""
 
-        [v.delete() for v in self._store.values()]
+        [v.delete() for v in list(self._store.values())]
 
     def _get_store(self, animation=None, zulu=True):
         """:return: all present parameters"""
 
         store = od()
-        for param, view in self.items():
+        for param, view in list(self.items()):
 
             if not view.active:
                 continue
@@ -307,7 +307,7 @@ class Recipe(collections.MutableMapping):
     def duration(self):
         """:return: total length of time for the loaded recipe"""
 
-        values = sum(self.points.values(), [])
+        values = sum(list(self.points.values()), [])
         min_ = min([t[0] for t in values]) if values else 0
         max_ = max([t[0] for t in values]) if values else 0
         return min_, max_
@@ -378,7 +378,7 @@ class Recipe(collections.MutableMapping):
     def keyframes(self):
         """:return: all present animation times/values as keyframes"""
 
-        items = self._anim_store.items()
+        items = list(self._anim_store.items())
         return od([(k, v.keyframes) for k, v in items if v.keyframes])
 
     def load(self):
@@ -390,7 +390,7 @@ class Recipe(collections.MutableMapping):
     def points(self):
         """:return: all present animation times/values as x/y coordinates"""
 
-        items = self._anim_store.items()
+        items = list(self._anim_store.items())
         return od([(k, v.points) for k, v in items if v.active])
 
     @property
@@ -450,7 +450,7 @@ class _Dict(collections.MutableMapping):
 
     def __call__(self, values):
 
-        for key, value in values.items():
+        for key, value in list(values.items()):
             name = key_cls(key, ver=False)
             prop = getattr(self, name)
             prop(value)
@@ -477,7 +477,7 @@ class _Dict(collections.MutableMapping):
     def active(self):
         """:return: True if `self._store` contains any items, else False"""
 
-        for index, prop in self._store.items():
+        for index, prop in list(self._store.items()):
             if prop.active:
                 return True
         return False
@@ -488,12 +488,12 @@ class _Dict(collections.MutableMapping):
         *this can be a slow operation on objects containing a lot of data*
         """
 
-        [v.arrange() for v in self._store.values()]
+        [v.arrange() for v in list(self._store.values())]
 
     def delete(self):
         """resets current object's items to empty values"""
 
-        [self.__delitem__(k) for k in self._store.keys()]
+        [self.__delitem__(k) for k in list(self._store.keys())]
 
     def dependencies(self, parent):
         """validates that the current object's recipe dependencies are met
@@ -504,7 +504,7 @@ class _Dict(collections.MutableMapping):
 
         def path(x): return '.'.join([parent, key_cls(x, ver=False)])
 
-        for param, prop in self.items():
+        for param, prop in list(self.items()):
             if not prop.active:
                 continue
 
@@ -520,7 +520,7 @@ class _Dict(collections.MutableMapping):
     def init(self):
         """resets object's internal values"""
 
-        for key, value in self._store.items():
+        for key, value in list(self._store.items()):
             name = key_cls(key)
             setattr(self, name, value)
 
@@ -528,7 +528,7 @@ class _Dict(collections.MutableMapping):
     def store(self):
         """:return: external/user-accessible value for the current object"""
 
-        items = self.items()
+        items = list(self.items())
 
         def key(x): return x.store if hasattr(x, 'store') else x
         return od([(key(k), v.store) for k, v in items if v.active])
@@ -876,7 +876,7 @@ class _List(collections.MutableMapping):
             stop += self._len
 
         if isinstance(index, slice):
-            slice_ = xrange(index.start, stop, index.step or 1)
+            slice_ = range(index.start, stop, index.step or 1)
             return [self._store[s] for s in slice_]
         else:
             return self._store[stop]
@@ -899,7 +899,7 @@ class _List(collections.MutableMapping):
     def _extract(self, start=0, end=None, step=1):
         """:return: extracted `self._store` values"""
 
-        values = self._store.values()[start:end:step]
+        values = list(self._store.values())[start:end:step]
         return [v.store for v in values if v.active]
 
     def _init(self):
@@ -918,7 +918,7 @@ class _List(collections.MutableMapping):
 
         unit = self._unit
         null = self._null
-        values = self.values()
+        values = list(self.values())
 
         def _store(k): return values[k]
 
@@ -943,7 +943,7 @@ class _List(collections.MutableMapping):
     def active(self):
         """:return: True if `self._store` contains any items else False"""
 
-        for prop in self.values():
+        for prop in list(self.values()):
             if prop.active:
                 return True
         return False
@@ -964,7 +964,7 @@ class _List(collections.MutableMapping):
     def delete(self):
         """resets current object to an empty value"""
 
-        [self.__delitem__(k) for k in self._store.keys()]
+        [self.__delitem__(k) for k in list(self._store.keys())]
 
     def dependencies(self, parent):
         """validates that the current object's recipe dependencies are met
@@ -973,7 +973,7 @@ class _List(collections.MutableMapping):
         :raise: `ToolError` if `self` does not meet required length
         """
 
-        for index, obj in self.items():
+        for index, obj in list(self.items()):
             name = '.'.join([parent, str(index)])
             obj.dependencies(name)
 
@@ -1030,8 +1030,8 @@ class _List(collections.MutableMapping):
         :return: popped value
         """
 
-        pop = self._store.values()[key]
-        self._store.values()[key]()
+        pop = list(self._store.values())[key]
+        list(self._store.values())[key]()
         self.arrange()
         return pop
 
@@ -1107,7 +1107,7 @@ class _ListHandlePairCoords(collections.MutableMapping):
             stop += self._len
 
         if isinstance(item, slice):
-            slice_ = xrange(item.start, stop, item.step or 1)
+            slice_ = range(item.start, stop, item.step or 1)
             return [self._store[s][self.index] for s in slice_]
         else:
             return self._store[stop][self.index]
@@ -1129,7 +1129,7 @@ class _ListHandlePairCoords(collections.MutableMapping):
     def _items(self):
         """internal access to object's indices and values"""
 
-        items = [x[self.index] for x in self._store.values() if x.active]
+        items = [x[self.index] for x in list(self._store.values()) if x.active]
         return items
 
     @property
@@ -1161,7 +1161,7 @@ class _ListHandlePairCoords(collections.MutableMapping):
     def delete(self):
         """resets current object's items to empty values"""
 
-        [self.__delitem__(k) for k in self._store.keys()]
+        [self.__delitem__(k) for k in list(self._store.keys())]
 
     def extend(self, value):
         """adds a list of values to the end of the current list
@@ -1226,7 +1226,7 @@ class _ListKeyframes(collections.MutableMapping):
 
         hp_keys = 'dt0', 'dt1', 'dv0', 'dv1'
         hp_dict = {k: None for k in hp_keys}
-        hp = {k: v for k, v in kwargs.items() if k in hp_keys}
+        hp = {k: v for k, v in list(kwargs.items()) if k in hp_keys}
         hp_dict.update(hp)
 
         self.time(time)
@@ -1234,7 +1234,7 @@ class _ListKeyframes(collections.MutableMapping):
         self.handle_pair(hp)
 
     def __delitem__(self, index):
-        [v.__delitem___(index) for v in self.keyframes.values()]
+        [v.__delitem___(index) for v in list(self.keyframes.values())]
 
     def __getitem__(self, index):
 
@@ -1242,16 +1242,16 @@ class _ListKeyframes(collections.MutableMapping):
             start = index.start or 0
             end = index.stop or self.__len__()
             step = index.step or 1
-            range_ = xrange(start, end, step)
+            range_ = range(start, end, step)
             return [self.keyframe(i) for i in range_]
         else:
             return self.keyframe(index)
 
     def __iter__(self):
-        return iter(self.keyframes.items())
+        return iter(list(self.keyframes.items()))
 
     def __len__(self):
-        return max([len(x) for x in self.__dict__.values()])
+        return max([len(x) for x in list(self.__dict__.values())])
 
     def __repr__(self):
         return dumps(self.store)
@@ -1311,7 +1311,7 @@ class _ListKeyframes(collections.MutableMapping):
         """:return: all present animation times/values as x/y coordinates"""
 
         points = []
-        items = self.keyframes.items()
+        items = list(self.keyframes.items())
         w = self.meta.dest + ": {} not set for keyframe {}, skipping"
 
         for i, props in items:
@@ -1359,7 +1359,7 @@ class _ListKeyframes(collections.MutableMapping):
     def store(self):
         """return: external/user-accessible value for the current object"""
 
-        return od([(k, v.store) for k, v in self.keyframes.items()])
+        return od([(k, v.store) for k, v in list(self.keyframes.items())])
 
     @property
     def x(self):

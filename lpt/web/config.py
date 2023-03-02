@@ -23,7 +23,7 @@
 #
 #
 
-import ConfigParser
+import configparser
 import collections
 import os
 import re
@@ -70,7 +70,7 @@ powertools_cfg = abspath(lytro_home, 'lytro-power-tools.cfg')
 #
 #
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.read(powertools_cfg)
 write = False
 
@@ -86,7 +86,7 @@ db = od([
     ('auth_token', None),
     ('verbose', False)])
 
-for option, value in db.items():
+for option, value in list(db.items()):
 
     if config.has_option(__prog__, option):
         config_value = config.get(__prog__, option)

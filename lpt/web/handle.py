@@ -22,8 +22,8 @@ import inspect
 import json
 import random
 import string
-import httplib
-import urllib2
+import http.client
+import urllib.request, urllib.error, urllib.parse
 
 from lpt.utils.msgutils import MsgUtils
 
@@ -71,26 +71,26 @@ class Handle(object):
             call['request']['data'] = data
             data = json.dumps(data)
 
-        request = urllib2.Request(url, data=data, headers=headers)
+        request = urllib.request.Request(url, data=data, headers=headers)
 
         if self.method in ('DELETE', 'PUT'):
-            opener = urllib2.build_opener(urllib2.HTTPHandler)
+            opener = urllib.request.build_opener(urllib.request.HTTPHandler)
             urlopen = opener.open
             request.add_header('Content-Type', content_type)
             request.get_method = lambda: self.method
         else:
-            urlopen = urllib2.urlopen
+            urlopen = urllib.request.urlopen
 
         try:
             response = urlopen(request)
             error_type = None
-        except urllib2.HTTPError as error:
+        except urllib.error.HTTPError as error:
             response = error
             error_type = 'HTTPError'
-        except urllib2.URLError as error:
+        except urllib.error.URLError as error:
             response = error
             error_type = 'URLError'
-        except httplib.BadStatusLine as error:
+        except http.client.BadStatusLine as error:
             response = error
             error_type = 'BadStatusLine'
         except Exception as error:
@@ -153,7 +153,7 @@ class Handle(object):
 
         if not isinstance(obj, dict):
             return obj
-        return dict((str(k), self.obj_stringify(v)) for k, v in obj.items())
+        return dict((str(k), self.obj_stringify(v)) for k, v in list(obj.items()))
 
     def obj_filter(self, obj):
         """filters out NoneType keys/values from a dict
@@ -165,7 +165,7 @@ class Handle(object):
         """
 
         build = {}
-        for key, value in obj.items():
+        for key, value in list(obj.items()):
             if value is not None:
                 if isinstance(value, dict):
                     build[key] = self.obj_filter(value)
@@ -197,13 +197,13 @@ class Handle(object):
         query = ''
         start = True
         kwargs = od(sorted(kwargs.items()))
-        for param, value in kwargs.items():
+        for param, value in list(kwargs.items()):
             param = str(param)
             value_str = ''
             if value or str(value) == '0':
                 query += '?' if start else '&'
                 start = False
-                if isinstance(value, (str, unicode)):
+                if isinstance(value, str):
                     value = value.replace(' ', '%20')
 
                 if isinstance(value, list):

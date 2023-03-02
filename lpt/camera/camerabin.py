@@ -44,7 +44,7 @@ class CameraControls:
     def send_cmd(self, cmd, sleep=.5):
         output = subprocess.check_output(shlex.split(cmd))
         if self.verbose:
-            print output
+            print(output)
         time.sleep(sleep)
 
 
@@ -60,7 +60,7 @@ class CameraControls:
             return False
 
     def get_valid_focus_range(self):
-        print "\nChecking for valid focus range..."
+        print("\nChecking for valid focus range...")
         current_focus = self.get_real_focus(True)
 
         self.set_real_focus(1645, True)
@@ -77,7 +77,7 @@ class CameraControls:
     def capture_wait(self, reps=1, sleep=0, adb_state=False):
         self.check_if_running_adb(adb_state)
         for i in range(reps):
-            print "\nTaking picture {count} of {total}".format(count=i+1, total=reps)
+            print("\nTaking picture {count} of {total}".format(count=i+1, total=reps))
             self.send_cmd("{}lyt captureBlocking 0".format(self.prefix))
             time.sleep(sleep)
 
@@ -85,7 +85,7 @@ class CameraControls:
     def take_picture(self, adb_state=False, number_of_pics=1, sleep=5.5):
         self.check_if_running_adb(adb_state)
         for i in range(number_of_pics):
-            print "\nTaking picture..."
+            print("\nTaking picture...")
             self.send_cmd("{}lyt capture 0".format(self.prefix), sleep)
 
     # iso value ranges: 80-3200
@@ -105,7 +105,7 @@ class CameraControls:
     def set_shutter_speed(self, sp_value, adb_state=False):
         self.check_if_running_adb(adb_state)
         self.set_exposure_mode('manual', adb_state)
-        print "\nSetting shutter speed to {}".format(sp_value)
+        print("\nSetting shutter speed to {}".format(sp_value))
         self.send_cmd("{prefix}model set shutterSpeed {sp}".format(prefix=self.prefix, sp=sp_value), 1)
 
 
@@ -128,7 +128,7 @@ class CameraControls:
         self.check_if_running_adb(adb_state)
         out = self.get_output("diagfsalb -q")
         if "Polling timed out" in out:
-            print "\nERROR: Camera display is turned OFF\n"
+            print("\nERROR: Camera display is turned OFF\n")
             sys.exit()
         #real_focus = abs(int((re.findall(r'\-?\d+', out))[22]))
         real_step = int((re.findall(r'\-?\d+', out))[22])
@@ -141,7 +141,7 @@ class CameraControls:
     def set_real_zoom(self, amount, adb_state=False):
         self.check_if_running_adb(adb_state)
         model_value = amount / float(self.max_user_zoom_step)
-        print "SETTING TO MODEL VALUE {}".format(model_value)
+        print("SETTING TO MODEL VALUE {}".format(model_value))
         self.send_cmd("{pre}model set zoomPos {value}".format(pre=self.prefix, value=model_value), 2)
 
 
@@ -149,7 +149,7 @@ class CameraControls:
         self.check_if_running_adb(adb_state)
         out = self.get_output("diagfsalb -q")
         if "Polling timed out" in out:
-            print "\nERROR: Camera display is turned OFF\n"
+            print("\nERROR: Camera display is turned OFF\n")
             sys.exit()
         real_step = int((re.findall(r'\-?\d+', out))[18])
         user_step = abs(real_step + -479)
@@ -180,7 +180,7 @@ class CameraControls:
                    'shutter': 'EXPOSURE_SHUTTER_PRIORITY',
                    'manual': 'EXPOSURE_MANUAL'}
         exp_mode = presets[mode]
-        print "\nSetting exp mode to {}".format(exp_mode)
+        print("\nSetting exp mode to {}".format(exp_mode))
         self.send_cmd("{prefix}model set exposureMode {preset}".format(prefix=self.prefix, preset=presets[mode]), 1)
 
     def get_exposure_mode(self, adb_state=False):
@@ -340,7 +340,7 @@ class CameraControls:
 
     def set_focus_ring_lock(self, value, adb_state=False):
         self.check_if_running_adb(adb_state)
-        print "{pre}model set FocusRingLock {value}".format(pre=self.prefix, value=value)
+        print("{pre}model set FocusRingLock {value}".format(pre=self.prefix, value=value))
         self.send_cmd("{pre}model set FocusRingLock {value}".format(pre=self.prefix, value=value))
 
     def get_focus_ring_lock(self, adb_state=False):
@@ -349,7 +349,7 @@ class CameraControls:
 
     def set_zoom_ring_lock(self, value, adb_state=False):
         self.check_if_running_adb(adb_state)
-        print "{pre}model set ZoomRingLock {value}".format(pre=self.prefix, value=value)
+        print("{pre}model set ZoomRingLock {value}".format(pre=self.prefix, value=value))
         self.send_cmd("{pre}model set ZoomRingLock {value}".format(pre=self.prefix, value=value))
 
     def get_zoom_ring_lock(self, adb_state=False):
@@ -405,21 +405,21 @@ class CameraControls:
     #Allows the camera to show LiveView while being connected to computer.
     def enable_virtual_cable(self, adb_state=False):
         self.check_if_running_adb(adb_state)
-        print "\nEnabling virtual cable mode..."
+        print("\nEnabling virtual cable mode...")
         self.send_cmd("{}camsettings set Storage.Mode.VirtualCable true".format(self.prefix), .5)
         self.send_cmd("{}lyt sdcardtest endUMS".format(self.prefix), 1.5)
 
     #Return camerat to default state
     def disable_virtual_cable(self, adb_state=False):
         self.check_if_running_adb(adb_state)
-        print "\nDisabling virtual cable mode..."
+        print("\nDisabling virtual cable mode...")
         self.send_cmd("{}camsettings set Storage.Mode.VirtualCable false".format(self.prefix), .5)
         self.send_cmd("{}lyt sdcardtest endUMS".format(self.prefix), 1.5)
 
     #disables idle timeout.
     def disable_timeout(self, adb_state=False):
         self.check_if_running_adb(adb_state)
-        print "\nDisabling idle timeout...."
+        print("\nDisabling idle timeout....")
         self.send_cmd("{}model set InactivityTimeoutSeconds 0".format(self.prefix), .5)
 
     def get_timeout_value(self, adb_state=False):
@@ -511,7 +511,7 @@ class CameraControls:
 
     def remount_dcf(self, adb_state=False):
         self.check_if_running_adb(adb_state)
-        print "Remount DCF...\n"
+        print("Remount DCF...\n")
         self.send_cmd("{}lyt unmountDcf 1".format(self.prefix))
         self.send_cmd("{}lyt mountDcf /storage/sdcard1/DCIM 1".format(self.prefix), 2)
 
@@ -568,16 +568,16 @@ class CameraControls:
         dest_path = os.path.join(args.path, "cameras", camera_sn)
         if not os.path.exists(dest_path):
             os.makedirs(dest_path)
-        print "\nPulling call data...\n"
-        print "path: " + "adb pull unitdata {}".format(os.path.join(args.path, "cameras", camera_sn))
+        print("\nPulling call data...\n")
+        print("path: " + "adb pull unitdata {}".format(os.path.join(args.path, "cameras", camera_sn)))
         self.send_cmd("adb pull unitdata {}".format(os.path.join(args.path, "cameras", camera_sn)))
-        print "\nCal data transfer completed\n"
+        print("\nCal data transfer completed\n")
         self.set_timeout(self.get_entry_from_json("sleep_timeout"), True)
         self.disable_virtual_cable(True)
 
 
     def handler(self, path, signal, param):
-        print "Cancelling import on {}".format(path)
+        print("Cancelling import on {}".format(path))
         self.remove_file(path)
         try:
             sys.exit(0)
@@ -606,7 +606,7 @@ class CameraControls:
         if folder_count > 0:
             end_directory_path += "_({})".format(folder_count+1)
 
-        print "\nWaiting for DCF...\n"
+        print("\nWaiting for DCF...\n")
         #Give it a sleep in case pictures are still being written to the card
         time.sleep(5)
         if self.higher_dcf_path_exists():
@@ -625,7 +625,7 @@ class CameraControls:
                     pull_cmd.append(final_path)
                     if sys.platform == 'win32':
                         [(item.replace("\\", "\\\\")) for item in pull_cmd]
-                    print "downloading {photo} to {path}".format(photo=photo, path=os.path.dirname(final_path))
+                    print("downloading {photo} to {path}".format(photo=photo, path=os.path.dirname(final_path)))
                     try:
                         #Handle Ctr + Z interrupt
                         try:
@@ -641,13 +641,13 @@ class CameraControls:
                     #Handle Ctr + C interrupt
                     except KeyboardInterrupt:
                         self.remove_file(final_path)
-                        print "Cancelling import on {}".format(final_path)
+                        print("Cancelling import on {}".format(final_path))
                         try:
                             sys.exit(0)
                         except SystemExit:
                             os._exit(0)
             time.sleep(1)
-            print "\nDONE!\n"
+            print("\nDONE!\n")
 
         #Otherwise download images from the latest script ran
         else:
@@ -656,7 +656,7 @@ class CameraControls:
             for photo in reversed(dcf_list):
                 if (LFR_counter + 1) > pictures_taken:
                     time.sleep(1)
-                    print "\nDONE!\n"
+                    print("\nDONE!\n")
                     break
                 if photo.endswith("LFR"):
                     LFR_counter += 1
@@ -667,7 +667,7 @@ class CameraControls:
                     if sys.platform == 'win32':
                         [(item.replace("\\", "\\\\")) for item in pull_cmd]
 
-                    print "downloading {photo} to {path}".format(photo=photo, path=os.path.dirname(final_path))
+                    print("downloading {photo} to {path}".format(photo=photo, path=os.path.dirname(final_path)))
                     try:
                         #Handle Ctr + Z interrupt
                         try:
@@ -682,7 +682,7 @@ class CameraControls:
                     #Handle Ctr + C interrupt
                     except KeyboardInterrupt:
                         self.remove_file(final_path)
-                        print "Cancelling import on {}".format(final_path)
+                        print("Cancelling import on {}".format(final_path))
                         try:
                             sys.exit(0)
                         except SystemExit:
@@ -696,7 +696,7 @@ class CameraControls:
         try:
             os.remove(path)
         except OSError:
-            print "Invalid Path"
+            print("Invalid Path")
 
 
     def get_entry_from_json(self, key):
@@ -721,17 +721,17 @@ class CameraControls:
 
     def handle_if_adb_not_running(self):
         if not self.is_adb_running():
-            print "\nERROR: ADB NOT RUNNING. Please check the following and try again."
-            print "\n-Make sure camera is properly connected via USB"
-            print "\n-Make sure ADB is activated. To activate ADB press and hold 'AEL' + 'Lytro' Button while " \
-                  "booting camera\n"
+            print("\nERROR: ADB NOT RUNNING. Please check the following and try again.")
+            print("\n-Make sure camera is properly connected via USB")
+            print("\n-Make sure ADB is activated. To activate ADB press and hold 'AEL' + 'Lytro' Button while " \
+                  "booting camera\n")
             sys.exit()
 
     def login_as_root_if_necessary(self):
         if not self.running_as_root():
-            print "\nLogging as root"
+            print("\nLogging as root")
             self.send_cmd("adb root")
-            raw_input("\nDisconnect and reconnect USB cable. Press ENTER to continue")
+            input("\nDisconnect and reconnect USB cable. Press ENTER to continue")
             time.sleep(2)
 
     def running_as_root(self):
