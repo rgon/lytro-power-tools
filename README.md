@@ -1,6 +1,5 @@
-=================
-Lytro Power Tools
-=================
+# Lytro Power Tools
+
 Advanced Lytro camera control and light field image processing
 
 Formerly `https://www.lytro.com/platform/power-tools` [(archived in archive.org)](https://web.archive.org/web/20150912094947/https://www.lytro.com/platform/power-tools/)
